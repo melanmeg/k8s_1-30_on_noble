@@ -1,8 +1,14 @@
 # kubernetes 1.31 on nobel
 
-Configuring Kuberenetes 1.31 with Containerd v2 on Ubuntu 24.04 (nobel).
+**Ansible Configuring Kuberenetes 1.31 with Containerd v2 on Ubuntu 24.04 (nobel).**
 
-## tmp
+## Usage
+
+```bash
+ansible-playbook...
+```
+
+## memo
 
 ```bash
 # Error
@@ -26,6 +32,10 @@ $ sudo ln -s /run/containerd/containerd.sock /var/run/containerd/containerd.sock
 $ sudo systemctl restart kubelet
 
 ### 修正案2
-sudo ln -s /run/containerd/containerd.sock /var/run/containerd/containerd.sock
+$ sudo ln -s /run/containerd/containerd.sock /var/run/containerd/containerd.sock
 $ sudo systemctl restart kubelet
+
+### migrate
+$ kubeadm config migrate --old-config ./join_kubeadm_cp.yaml --new-config ./new_join_kubeadm_cp.yaml
+
 ```

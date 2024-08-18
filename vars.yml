@@ -2,23 +2,23 @@ variables:
   k8s:
     all:
       tasks:
-        - common/sysctl.yml
-        - common/nfs-client.yml
+        # - common/sysctl.yml
+        # - common/nfs-client.yml
         - common/k8s.yml
     cp:
       tasks:
         - cp/ha-main.yml
         - cp/setup.yml
-        - cp/cilium.yml
+        # - cp/cilium.yml
     # cp_join:
     #   tasks:
     #     - cp/ha-backend.yml
     #     - cp/join.yml
     wk:
       tasks:
-        - wk/ha-main.yml
-        - wk/setup.yml
+        # - wk/ha-main.yml
+        # - wk/setup.yml
     wk_backup:
       tasks:
-        - wk/ha-backup.yml
-        - wk/setup.yml
+        # - wk/ha-backup.yml
+        # - wk/setup.yml
