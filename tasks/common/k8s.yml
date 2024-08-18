@@ -1,0 +1,42 @@
+- name:
+  ansible.builtin.apt:
+    name: aria2
+    state: present
+
+- name: service
+  ansible.builtin.service:
+    name: apparmor
+    enabled: false
+    state: stopped
+
+- name: copy
+  become: false
+  ansible.builtin.copy:
+    src: ./files/common/containerd.sh
+    dest: /tmp/containerd.sh
+    mode: "0755"
+
+- name: copy
+  become: false
+  ansible.builtin.copy:
+    src: ./files/common/k8s.sh
+    dest: /tmp/k8s.sh
+    mode: "0755"
+
+- name: ./containerd.sh
+  become: false
+  ansible.builtin.shell: bash /tmp/containerd.sh
+
+- name: ./k8s.sh
+  become: false
+  ansible.builtin.shell: bash /tmp/k8s.sh
+
+- name: copy
+  ansible.builtin.copy:
+    src: ./files/common/99-k8s-cri.conf
+    dest: /etc/sysctl.d/99-k8s-cri.conf
+    mode: "0644"
+
+- name: shell
+  become: true
+  ansible.builtin.shell: sysctl --system

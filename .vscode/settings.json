@@ -1,0 +1,15 @@
+{
+  "flake8.interpreter": ["false"],
+  "editor.formatOnSave": true,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": false,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "files.associations": {
+    "*.yml": "yaml",
+    "*.yaml": "yaml"
+  }
+}

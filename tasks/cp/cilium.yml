@@ -1,0 +1,14 @@
+- name: shell
+  ansible.builtin.shell: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+- name: shell
+  ansible.builtin.shell: helm repo add cilium https://helm.cilium.io/
+
+- name: Execute helm
+  ansible.builtin.shell: |
+    helm install cilium cilium/cilium \
+        --version 1.16.1 \
+        --namespace kube-system \
+        --set k8sServiceHost={{ KUBE_API_SERVER_VIP }} \
+        --set k8sServicePort=8443
+  ignore_errors: true

@@ -1,0 +1,29 @@
+- name: Copy 99-nofile.conf
+  become: true
+  ansible.builtin.copy:
+    src: ./files/sysctl/99-nofile.conf
+    dest: /etc/security/limits.d/99-nofile.conf
+    mode: "0644"
+
+- name: Copy 99-network.conf
+  become: true
+  ansible.builtin.copy:
+    src: ./files/sysctl/99-network.conf
+    dest: /etc/sysctl.d/99-network.conf
+    mode: "0644"
+
+- name: Copy 99-link-restrictions.conf
+  become: true
+  ansible.builtin.copy:
+    src: ./files/sysctl/99-link-restrictions.conf
+    dest: /etc/sysctl.d/99-link-restrictions.conf
+    mode: "0644"
+
+- name: shell
+  become: true
+  ansible.builtin.shell: sysctl --system && ulimit -n
+
+- name: Reboot the machine (Wait for 5 min)
+  become: true
+  ansible.builtin.reboot:
+    reboot_timeout: 300

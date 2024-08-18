@@ -1,0 +1,29 @@
+# Define the script used to check if haproxy is still working
+vrrp_script chk_haproxy {
+    script "/usr/bin/killall -0 haproxy"
+    interval 2
+    weight 2
+}
+
+# Configuration for Virtual Interface
+vrrp_instance LB_VIP {
+  interface enp1s0
+  state MASTER        # set to BACKUP on the peer machine
+  priority 101        # set to  99 on the peer machine
+  virtual_router_id 51
+  smtp_alert          # Enable Notifications Via Email
+  authentication {
+      auth_type AH
+      auth_pass zaq12wsx	# Password for accessing vrrpd. Same on all devices
+  }
+  unicast_src_ip {{ NODE_IP_1 }} # Private IP address of master
+  unicast_peer {
+      {{ NODE_IP_3 }}		# Private IP address of the backup haproxy
+  }
+  virtual_ipaddress {
+      {{ KUBE_API_SERVER_VIP }}
+  }
+  track_script {
+      chk_haproxy
+  }
+}

@@ -1,0 +1,9 @@
+- name: Copy join_kubeadm_wk.yaml
+  ansible.builtin.copy:
+    src: ./files/fetch/join_kubeadm_wk.yaml
+    dest: ~/join_kubeadm_wk.yaml
+    mode: "0755"
+
+- name: Execute kubeadm join
+  ansible.builtin.shell: kubeadm join --config ~/join_kubeadm_wk.yaml
+  ignore_errors: true

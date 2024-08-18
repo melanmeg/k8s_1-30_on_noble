@@ -1,0 +1,37 @@
+- name: apt
+  ansible.builtin.apt:
+    name:
+      - haproxy
+      - keepalived
+
+- name: template
+  ansible.builtin.template:
+    src: ./files/redundant/cp/haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+  ignore_errors: true
+
+- name: shell
+  shell: echo "net.ipv4.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
+
+- name: shell
+  shell: sysctl --system
+
+- name: template
+  ansible.builtin.template:
+    src: ./files/redundant/cp/keepalived.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+  ignore_errors: true
+
+- name: service
+  ansible.builtin.service:
+    name: keepalived
+    state: restarted
+    enabled: true
+  ignore_errors: true
+
+- name: service
+  ansible.builtin.service:
+    name: haproxy
+    state: restarted
+    enabled: true
+  ignore_errors: true

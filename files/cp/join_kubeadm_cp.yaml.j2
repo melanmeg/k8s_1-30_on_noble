@@ -1,0 +1,16 @@
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+cgroupDriver: "systemd"
+protectKernelDefaults: true
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: JoinConfiguration
+nodeRegistration:
+  criSocket: "/var/run/containerd/containerd.sock"
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: "{{ KUBE_API_SERVER_VIP }}:8443"
+    token: "{{ KUBEADM_BOOTSTRAP_TOKEN }}"
+    unsafeSkipCAVerification: true
+controlPlane:
+  certificateKey: "{{ KUBEADM_UPLOADED_CERTS }}"

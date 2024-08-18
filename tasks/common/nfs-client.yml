@@ -1,0 +1,19 @@
+- name: apt
+  ansible.builtin.apt:
+    name:
+      - nfs-common
+
+- name: Create folder
+  ansible.builtin.file:
+    path: "/mnt/share"
+    state: directory
+    mode: "0777"
+
+- name: set fstab
+  ansible.builtin.lineinfile:
+    dest: /etc/fstab
+    insertafter: EOF
+    line: "192.168.11.12:/mnt/nfsshare/k8s/share /mnt/share nfs defaults 0 0"
+
+- name: mount
+  ansible.builtin.shell: mount -a

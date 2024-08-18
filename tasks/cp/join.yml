@@ -1,0 +1,9 @@
+- name: Copy join_kubeadm_cp.yaml
+  ansible.builtin.copy:
+    src: "./files/fetch/join_kubeadm_cp.yaml"
+    dest: ~/join_kubeadm_cp.yaml
+    mode: "0755"
+
+- name: Execute join
+  shell: kubeadm join --config ~/join_kubeadm_cp.yaml
+  ignore_errors: true
