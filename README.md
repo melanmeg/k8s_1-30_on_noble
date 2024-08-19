@@ -5,37 +5,14 @@
 ## Usage
 
 ```bash
-ansible-playbook...
+ansible-playbook -i hosts site.yml
 ```
 
-## memo
+## Env
 
-```bash
-# Error
-
-## token
-kubeadm token create --print-join-command
-
-## socket
-
-### 調査コマンド
-ss -lx | grep containerd.sock
-ss -lx | grep '/var/run/containerd/containerd.sock' # ソケットのリスニング状況を確認
-sudo lsof | grep '/var/run/containerd/containerd.sock' # ソケットを使用しているプロセスを確認
-ps aux | grep containerd # containerd プロセスの確認
-
-
-### 修正案1
-$ vim /var/lib/kubelet/config.yaml
-container-runtime-endpoint: unix:///run/containerd/containerd.sock
-$ sudo ln -s /run/containerd/containerd.sock /var/run/containerd/containerd.sock
-$ sudo systemctl restart kubelet
-
-### 修正案2
-$ sudo ln -s /run/containerd/containerd.sock /var/run/containerd/containerd.sock
-$ sudo systemctl restart kubelet
-
-### migrate
-$ kubeadm config migrate --old-config ./join_kubeadm_cp.yaml --new-config ./new_join_kubeadm_cp.yaml
-
-```
+- Ubuntu 24.04
+- kubernetes 1.31
+- Containerd v2.0.0-rc.3
+- Cilium 1.16.1
+- Haproxy + Keepalived
+- NFS

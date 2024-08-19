@@ -22,17 +22,17 @@
       with_items: "{{ variables.k8s.cp.tasks }}"
       when: variables.k8s.cp.tasks
 
-# - name: cp-join
-#   hosts: cp_join
-#   remote_user: "{{ USER }}"
-#   become: true
-#   vars_files:
-#     - ./env.yml
-#     - ./vars.yml
-#   tasks:
-#     - include_tasks: "./tasks/{{ item }}"
-#       with_items: "{{ vars.k8s.cp_join.tasks }}"
-#       when: vars.k8s.cp_join.tasks
+- name: cp-join
+  hosts: cp_join
+  remote_user: "{{ USER }}"
+  become: true
+  vars_files:
+    - ./env.yml
+    - ./vars.yml
+  tasks:
+    - include_tasks: "./tasks/{{ item }}"
+      with_items: "{{ vars.k8s.cp_join.tasks }}"
+      when: vars.k8s.cp_join.tasks
 
 - name: wk-backup
   hosts: wk_backup

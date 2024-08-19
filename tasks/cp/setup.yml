@@ -2,17 +2,16 @@
   ansible.builtin.shell: kubeadm config images pull
 
 - name: k9s
-  ansible.builtin.shell: curl -sS https://webinstall.dev/k9s | bash
-
-- name: k9s
-  ansible.builtin.shell: echo "source ~/.config/envman/PATH.env" >> ~/.bashrc
-
-- name: k9s
-  ansible.builtin.shell: rm -rf ~/Downloads
+  ansible.builtin.shell: |
+    aria2c -d /tmp -x 16 -s 16 -k 1M -o k9s.tar.gz https://github.com/derailed/k9s/releases/download/v0.32.5/k9s_Linux_amd64.tar.gz
+    tar -xvf /tmp/k9s.tar.gz -C /tmp
+    cp -a /tmp/k9s /usr/local/bin/k9s
+    chown root:root /usr/local/bin/k9s
+    chmod +x /usr/local/bin/k9s
 
 - name: Generate and set KUBEADM_BOOTSTRAP_TOKEN as a fact
   ansible.builtin.set_fact:
-    KUBEADM_BOOTSTRAP_TOKEN: "{{ lookup('pipe', 'kubeadm token create') }}"
+    KUBEADM_BOOTSTRAP_TOKEN: "{{ lookup('pipe', 'echo $(openssl rand -hex 3).$(openssl rand -hex 8)') }}"
   ignore_errors: true
 
 - name: template
@@ -22,79 +21,69 @@
   environment:
     KUBEADM_BOOTSTRAP_TOKEN: "{{ KUBEADM_BOOTSTRAP_TOKEN }}"
   ignore_errors: true
-# - name: Execute kubeadm init
-#   ansible.builtin.shell: kubeadm init --config /tmp/init_kubeadm.yaml --skip-phases=addon/kube-proxy
 
-# - name: file
-#   ansible.builtin.file:
-#     path: "/home/{{ USER }}/.kube"
-#     state: directory
-#     owner: "{{ USER }}"
-#     group: "{{ USER }}"
-#     recurse: true
+- name: Execute kubeadm init
+  ansible.builtin.shell: kubeadm init --config /tmp/init_kubeadm.yaml --skip-phases=addon/kube-proxy
 
-# - name: copy
-#   ansible.builtin.copy:
-#     src: /etc/kubernetes/admin.conf
-#     dest: "/home/{{ USER }}/.kube/config"
-#     owner: "{{ USER }}"
-#     group: "{{ USER }}"
-#     mode: "0600"
-#     remote_src: true
-#   ignore_errors: true
+- name: file
+  ansible.builtin.file:
+    path: "/home/{{ USER }}/.kube"
+    state: directory
+    owner: "{{ USER }}"
+    group: "{{ USER }}"
+    recurse: true
 
-# - name: Generate and set KUBEADM_UPLOADED_CERTS as a fact
-#   ansible.builtin.set_fact:
-#     KUBEADM_BOOTSTRAP_TOKEN: "{{ lookup('pipe', 'echo $(kubeadm init phase upload-certs --upload-certs | tail -n 1)') }}"
-#   ignore_errors: true
+- name: copy
+  ansible.builtin.copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "/home/{{ USER }}/.kube/config"
+    owner: "{{ USER }}"
+    group: "{{ USER }}"
+    mode: "0600"
+    remote_src: true
+  ignore_errors: true
 
-# - name: template
-#   ansible.builtin.template:
-#     src: ./files/cp/join_kubeadm_cp.yaml.j2
-#     dest: /tmp/join_kubeadm_cp.yaml
-#   environment:
-#     KUBEADM_BOOTSTRAP_TOKEN: "{{ KUBEADM_BOOTSTRAP_TOKEN }}"
-#     KUBEADM_UPLOADED_CERTS: "{{ KUBEADM_UPLOADED_CERTS }}"
-#   ignore_errors: true
+- name: Generate and set KUBEADM_UPLOADED_CERTS as a fact
+  ansible.builtin.set_fact:
+    KUBEADM_BOOTSTRAP_TOKEN: "{{ lookup('pipe', 'echo $(kubeadm init phase upload-certs --upload-certs | tail -n 1)') }}"
+  ignore_errors: true
 
-# - name: template
-#   ansible.builtin.template:
-#     src: ./files/cp/join_kubeadm_wk.yaml.j2
-#     dest: /tmp/join_kubeadm_wk.yaml
-#   environment:
-#     KUBEADM_BOOTSTRAP_TOKEN: "{{ KUBEADM_BOOTSTRAP_TOKEN }}"
-#   ignore_errors: true
+- name: template
+  ansible.builtin.template:
+    src: ./files/cp/join_kubeadm_cp.yaml.j2
+    dest: /tmp/join_kubeadm_cp.yaml
+  environment:
+    KUBEADM_BOOTSTRAP_TOKEN: "{{ KUBEADM_BOOTSTRAP_TOKEN }}"
+    KUBEADM_UPLOADED_CERTS: "{{ KUBEADM_UPLOADED_CERTS }}"
+  ignore_errors: true
 
-# - name: fetch joinfile cp
-#   ansible.builtin.fetch:
-#     src: "/tmp/join_kubeadm_cp.yaml"
-#     dest: "./files/fetch/"
-#     flat: true
-#   ignore_errors: true
+- name: template
+  ansible.builtin.template:
+    src: ./files/cp/join_kubeadm_wk.yaml.j2
+    dest: /tmp/join_kubeadm_wk.yaml
+  environment:
+    KUBEADM_BOOTSTRAP_TOKEN: "{{ KUBEADM_BOOTSTRAP_TOKEN }}"
+  ignore_errors: true
 
-# - name: fetch joinfile wk
-#   ansible.builtin.fetch:
-#     src: "/tmp/join_kubeadm_wk.yaml"
-#     dest: "./files/fetch/"
-#     flat: true
-#   ignore_errors: true
+- name: fetch joinfile cp
+  ansible.builtin.fetch:
+    src: "/tmp/join_kubeadm_cp.yaml"
+    dest: "./files/fetch/"
+    flat: true
+  ignore_errors: true
 
-# - name: blockinfile .bashrc
-#   ansible.builtin.blockinfile:
-#     dest: "/home/{{ USER }}/.bashrc"
-#     insertafter: EOF
-#     block: |
-#       source <(kubectl completion bash)
-#       alias k='kubectl'
-#       complete -F __start_kubectl k
-#       alias kcv='kubectl config view -o jsonpath='{.users[*].name}''
-#       alias kgn='kubectl get node -A'
-#       alias kgp='kubectl get pod -A'
-#       alias kgpw='kubectl get pod -A -o wide'
-#       alias kgs='kubectl get svc -A'
-#       alias kgd='kubectl get deployment -A'
-#       alias kgstate='kubectl get statefulset -A'
-#       alias kgsc='kubectl get storageclass -A'
-#       alias kgname='kubectl get namespace -A'
-#       alias kak='kubectl apply -k ./'
-#       alias kd='kubectl describe'
+- name: fetch joinfile wk
+  ansible.builtin.fetch:
+    src: "/tmp/join_kubeadm_wk.yaml"
+    dest: "./files/fetch/"
+    flat: true
+  ignore_errors: true
+
+- name: blockinfile .bashrc
+  ansible.builtin.blockinfile:
+    dest: "/home/{{ USER }}/.bashrc"
+    insertafter: EOF
+    block: |
+      source <(kubectl completion bash)
+      alias k='kubectl'
+      complete -F __start_kubectl k
