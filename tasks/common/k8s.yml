@@ -38,5 +38,4 @@
     mode: "0644"
 
 - name: shell
-  become: true
   ansible.builtin.shell: sysctl --system

@@ -45,7 +45,7 @@
 
 - name: Generate and set KUBEADM_UPLOADED_CERTS as a fact
   ansible.builtin.set_fact:
-    KUBEADM_BOOTSTRAP_TOKEN: "{{ lookup('pipe', 'echo $(kubeadm init phase upload-certs --upload-certs | tail -n 1)') }}"
+    KUBEADM_UPLOADED_CERTS: "{{ lookup('pipe', 'echo $(kubeadm init phase upload-certs --upload-certs | tail -n 1)') }}"
   ignore_errors: true
 
 - name: template
