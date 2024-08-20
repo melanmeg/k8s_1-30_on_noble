@@ -16,7 +16,6 @@ nodeRegistration:
   criSocket: unix://{{ CRI_SOCKET_PATH }}
   imagePullPolicy: IfNotPresent
   imagePullSerial: true
-  name: {{ HOSTNAME_CP_1 }}
   taints:
     - effect: NoSchedule
       key: node-role.kubernetes.io/control-plane

@@ -27,13 +27,27 @@
 
 - name: file
   ansible.builtin.file:
+    path: "~/.kube"
+    state: directory
+    recurse: true
+
+- name: copy
+  ansible.builtin.copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "~/.kube/config"
+    mode: "0600"
+    remote_src: true
+  ignore_errors: true
+
+- name: file {{ USER }}
+  ansible.builtin.file:
     path: "/home/{{ USER }}/.kube"
     state: directory
     owner: "{{ USER }}"
     group: "{{ USER }}"
     recurse: true
 
-- name: copy
+- name: copy {{ USER }}
   ansible.builtin.copy:
     src: /etc/kubernetes/admin.conf
     dest: "/home/{{ USER }}/.kube/config"
@@ -78,6 +92,15 @@
     dest: "./files/fetch/"
     flat: true
   ignore_errors: true
+
+- name: blockinfile .bashrc
+  ansible.builtin.blockinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    block: |
+      source <(kubectl completion bash)
+      alias k='kubectl'
+      complete -F __start_kubectl k
 
 - name: blockinfile .bashrc
   ansible.builtin.blockinfile:

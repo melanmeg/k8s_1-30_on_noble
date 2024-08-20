@@ -10,25 +10,21 @@
     state: stopped
 
 - name: copy
-  become: false
   ansible.builtin.copy:
     src: ./files/common/containerd.sh
     dest: /tmp/containerd.sh
     mode: "0755"
 
 - name: copy
-  become: false
   ansible.builtin.copy:
     src: ./files/common/k8s.sh
     dest: /tmp/k8s.sh
     mode: "0755"
 
 - name: ./containerd.sh
-  become: false
   ansible.builtin.shell: bash /tmp/containerd.sh
 
 - name: ./k8s.sh
-  become: false
   ansible.builtin.shell: bash /tmp/k8s.sh
 
 - name: copy

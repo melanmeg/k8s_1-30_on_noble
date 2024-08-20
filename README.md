@@ -14,5 +14,10 @@ ansible-playbook -i hosts site.yml
 - kubernetes 1.31
 - Containerd v2.0.0-rc.3
 - Cilium 1.16.1
+- KVM
 - Haproxy + Keepalived
 - NFS
+
+## Time of recreate_cluster
+
+Execution time: 179 seconds
