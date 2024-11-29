@@ -58,4 +58,4 @@ spec:
 
 ## Time of recreate_cluster
 
-Execution time: 355 seconds
+Execution time: 464 seconds
