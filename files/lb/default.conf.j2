@@ -1,0 +1,10 @@
+upstream k8s-api {
+    server {{ hostvars['k8s-cp-1']['ansible_default_ipv4']['address'] }}:6443;
+    server {{ hostvars['k8s-cp-2']['ansible_default_ipv4']['address'] }}:6443;
+    server {{ hostvars['k8s-cp-3']['ansible_default_ipv4']['address'] }}:6443;
+}
+
+server {
+    listen 6443;
+    proxy_pass k8s-api;
+}

@@ -1,0 +1,83 @@
+- name: all
+  hosts: all
+  remote_user: "{{ USER }}"
+  become: true
+  vars_files:
+    - ./vars_files/env.yml
+    - ./vars_files/vars.yml
+  tasks:
+    - include_tasks: "./tasks/{{ item }}"
+      with_items: "{{ variables.all.tasks }}"
+      when: variables.all.tasks
+
+- name: lb
+  hosts: lb
+  remote_user: "{{ USER }}"
+  become: true
+  vars_files:
+    - ./vars_files/env.yml
+    - ./vars_files/vars.yml
+  tasks:
+    - include_tasks: "./tasks/{{ item }}"
+      with_items: "{{ variables.lb.tasks }}"
+      when: variables.lb.tasks
+
+- name: all-node
+  hosts: all_node
+  remote_user: "{{ USER }}"
+  become: true
+  vars_files:
+    - ./vars_files/env.yml
+    - ./vars_files/vars.yml
+  tasks:
+    - include_tasks: "./tasks/{{ item }}"
+      with_items: "{{ variables.k8s.all_node.tasks }}"
+      when: variables.k8s.all_node.tasks
+
+- name: cp
+  hosts: cp
+  remote_user: "{{ USER }}"
+  become: true
+  vars_files:
+    - ./vars_files/env.yml
+    - ./vars_files/vars.yml
+  tasks:
+    - include_tasks: "./tasks/{{ item }}"
+      with_items: "{{ variables.k8s.cp.tasks }}"
+      when: variables.k8s.cp.tasks
+
+- name: cp-join
+  hosts: cp_join
+  remote_user: "{{ USER }}"
+  become: true
+  vars_files:
+    - ./vars_files/env.yml
+    - ./vars_files/vars.yml
+  tasks:
+    - include_tasks: "./tasks/{{ item }}"
+      with_items: "{{ variables.k8s.cp_join.tasks }}"
+      when: variables.k8s.cp_join.tasks
+
+- name: worker
+  hosts: worker
+  remote_user: "{{ USER }}"
+  become: true
+  vars_files:
+    - ./vars_files/env.yml
+    - ./vars_files/vars.yml
+  tasks:
+    - include_tasks: "./tasks/{{ item }}"
+      with_items: "{{ variables.k8s.worker.tasks }}"
+      when: variables.k8s.worker.tasks
+
+- name: cp-after
+  hosts: cp
+  remote_user: "{{ USER }}"
+  become: false
+  vars_files:
+    - ./vars_files/env.yml
+    - ./vars_files/vars.yml
+  tasks:
+    - include_tasks: "./tasks/{{ item }}"
+      with_items: "{{ variables.k8s.cp_after.tasks }}"
+      when: variables.k8s.cp_after.tasks

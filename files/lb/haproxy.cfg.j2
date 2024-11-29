@@ -22,21 +22,17 @@ defaults
   errorfile 502 /etc/haproxy/errors/502.http
   errorfile 503 /etc/haproxy/errors/503.http
   errorfile 504 /etc/haproxy/errors/504.http
-{% for key, data in lists.items() %}
-# {{ data[0] }}
-frontend {{ data[0] }}
+frontend k8s-api
+  bind {{ KUBE_API_SERVER_VIP }}:6443
   mode tcp
   option tcplog
-  bind {{ data[1] }}:{{ data[2]}}
-  default_backend {{ data[0] }}
-
-backend {{ data[0] }}
+  default_backend k8s-api
+backend k8s-api
   mode tcp
   option tcplog
   option tcp-check
   balance roundrobin
   default-server inter 10s downinter 5s rise 2 fall 2 slowstart 60s maxconn 250 maxqueue 256 weight 100
-  server {{ data[0] }}-1 {{ WK_IP_1 }}:{{ data[3]}} check
-  server {{ data[0] }}-2 {{ WK_IP_2 }}:{{ data[3]}} check
-  server {{ data[0] }}-3 {{ WK_IP_3 }}:{{ data[3]}} check
-{% endfor %}
+  server k8s-api-1 {{ hostvars['k8s-cp-1']['ansible_default_ipv4']['address'] }}:6443 check
+  server k8s-api-2 {{ hostvars['k8s-cp-2']['ansible_default_ipv4']['address'] }}:6443 check
+  server k8s-api-3 {{ hostvars['k8s-cp-3']['ansible_default_ipv4']['address'] }}:6443 check

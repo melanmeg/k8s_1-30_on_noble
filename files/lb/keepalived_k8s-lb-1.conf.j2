@@ -9,16 +9,16 @@ vrrp_script chk_haproxy {
 vrrp_instance LB_VIP {
   interface enp1s0
   state MASTER        # set to BACKUP on the peer machine
-  priority 101        # set to  99 on the peer machine
+  priority 101        # set to 99 on the peer machine
   virtual_router_id 51
   smtp_alert          # Enable Notifications Via Email
   authentication {
       auth_type AH
       auth_pass zaq12wsx	# Password for accessing vrrpd. Same on all devices
   }
-  unicast_src_ip {{ NODE_IP_1 }} # Private IP address of master
+  unicast_src_ip {{ hostvars['k8s-lb-1']['ansible_default_ipv4']['address'] }} # Private IP address of primary
   unicast_peer {
-      {{ NODE_IP_3 }}		# Private IP address of the backup haproxy
+      {{ hostvars['k8s-lb-2']['ansible_default_ipv4']['address'] }} # Private IP address of the backup haproxy
   }
   virtual_ipaddress {
       {{ KUBE_API_SERVER_VIP }}

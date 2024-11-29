@@ -1,0 +1,9 @@
+- name: copy
+  ansible.builtin.copy:
+    src: "./files/cp/role.yaml"
+    dest: /tmp/role.yaml
+    mode: "0755"
+
+- name: shell
+  shell: kubectl apply -f /tmp/role.yaml
+  ignore_errors: true

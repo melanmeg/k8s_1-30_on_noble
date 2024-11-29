@@ -9,7 +9,7 @@
     chown root:root /usr/local/bin/k9s
     chmod +x /usr/local/bin/k9s
 
-- name: Generate and set KUBEADM_BOOTSTRAP_TOKEN as a fact
+- name: Generate and set_fact KUBEADM_BOOTSTRAP_TOKEN
   ansible.builtin.set_fact:
     KUBEADM_BOOTSTRAP_TOKEN: "{{ lookup('pipe', 'echo $(openssl rand -hex 3).$(openssl rand -hex 8)') }}"
   ignore_errors: true
@@ -57,10 +57,13 @@
     remote_src: true
   ignore_errors: true
 
-- name: Generate and set KUBEADM_UPLOADED_CERTS as a fact
+- name: shell Generate KUBEADM_UPLOADED_CERTS
+  ansible.builtin.shell: kubeadm init phase upload-certs --upload-certs 2>&1 | tail -n 1
+  register: shell_output
+
+- name: set_fact KUBEADM_UPLOADED_CERTS
   ansible.builtin.set_fact:
-    KUBEADM_UPLOADED_CERTS: "{{ lookup('pipe', 'echo $(kubeadm init phase upload-certs --upload-certs | tail -n 1)') }}"
-  ignore_errors: true
+    KUBEADM_UPLOADED_CERTS: "{{ shell_output.stdout }}"
 
 - name: template
   ansible.builtin.template:
@@ -102,7 +105,7 @@
       alias k='kubectl'
       complete -F __start_kubectl k
 
-- name: blockinfile .bashrc
+- name: blockinfile .bashrc {{ USER }}
   ansible.builtin.blockinfile:
     dest: "/home/{{ USER }}/.bashrc"
     insertafter: EOF

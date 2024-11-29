@@ -1,0 +1,8 @@
+- name: shell
+  ansible.builtin.shell: kubectl label node {{ VM_HOSTNAME_WK_1 }} node-role.kubernetes.io/worker=
+
+- name: shell
+  ansible.builtin.shell: kubectl label node {{ VM_HOSTNAME_WK_2 }} node-role.kubernetes.io/worker=
+
+- name: shell
+  ansible.builtin.shell: kubectl label node {{ VM_HOSTNAME_WK_3 }} node-role.kubernetes.io/worker=

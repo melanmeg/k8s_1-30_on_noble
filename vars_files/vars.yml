@@ -1,0 +1,26 @@
+variables:
+  all:
+    tasks:
+      - common/sysctl.yml
+  lb:
+    tasks:
+      - lb/ha.yml
+  k8s:
+    all_node:
+      tasks:
+        - common/nfs-client.yml
+        - common/k8s.yml
+    cp:
+      tasks:
+        - cp/setup.yml
+    cp_join:
+      tasks:
+        - cp/join.yml
+    worker:
+      tasks:
+        - wk/join.yml
+    cp_after:
+      tasks:
+        - cp/label-node.yml
+        - cp/cilium.yml
+        - cp/role.yml

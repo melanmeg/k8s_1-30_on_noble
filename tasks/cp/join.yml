@@ -1,3 +1,6 @@
+- name: kubeadm config images pull
+  ansible.builtin.shell: kubeadm config images pull
+
 - name: Copy join_kubeadm_cp.yaml
   ansible.builtin.copy:
     src: "./files/fetch/join_kubeadm_cp.yaml"
@@ -7,3 +10,64 @@
 - name: Execute join
   shell: kubeadm join --config ~/join_kubeadm_cp.yaml
   ignore_errors: true
+
+- name: k9s
+  ansible.builtin.shell: |
+    aria2c -d /tmp -x 16 -s 16 -k 1M -o k9s.tar.gz https://github.com/derailed/k9s/releases/download/v0.32.5/k9s_Linux_amd64.tar.gz
+    tar -xvf /tmp/k9s.tar.gz -C /tmp
+    cp -a /tmp/k9s /usr/local/bin/k9s
+    chown root:root /usr/local/bin/k9s
+    chmod +x /usr/local/bin/k9s
+
+- name: file
+  ansible.builtin.file:
+    path: "~/.kube"
+    state: directory
+    recurse: true
+
+- name: copy
+  ansible.builtin.copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "~/.kube/config"
+    mode: "0600"
+    remote_src: true
+  ignore_errors: true
+
+- name: file {{ USER }}
+  ansible.builtin.file:
+    path: "/home/{{ USER }}/.kube"
+    state: directory
+    owner: "{{ USER }}"
+    group: "{{ USER }}"
+    recurse: true
+
+- name: copy {{ USER }}
+  ansible.builtin.copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "/home/{{ USER }}/.kube/config"
+    owner: "{{ USER }}"
+    group: "{{ USER }}"
+    mode: "0600"
+    remote_src: true
+  ignore_errors: true
+
+- name: blockinfile .bashrc
+  ansible.builtin.blockinfile:
+    dest: "~/.bashrc"
+    insertafter: EOF
+    block: |
+      source <(kubectl completion bash)
+      alias k='kubectl'
+      complete -F __start_kubectl k
+
+- name: blockinfile .bashrc {{ USER }}
+  ansible.builtin.blockinfile:
+    dest: "/home/{{ USER }}/.bashrc"
+    insertafter: EOF
+    block: |
+      source <(kubectl completion bash)
+      alias k='kubectl'
+      complete -F __start_kubectl k
+
+- name: shell
+  ansible.builtin.shell: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash

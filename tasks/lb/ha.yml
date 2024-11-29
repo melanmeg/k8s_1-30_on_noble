@@ -4,24 +4,22 @@
       - haproxy
       - keepalived
 
-- name: copy
-  ansible.builtin.copy:
-    src: ./files/redundant/wk/haproxy/haproxy.cfg
-    dest: /etc/haproxy/
-    mode: "0644"
+- name: template
+  ansible.builtin.template:
+    src: ./files/lb/haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
   ignore_errors: true
 
 - name: shell
-  ansible.builtin.shell: echo "net.ipv4.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
+  shell: echo "net.ipv4.ip_nonlocal_bind = 1" >> /etc/sysctl.conf
 
 - name: shell
-  ansible.builtin.shell: sysctl --system
+  shell: sysctl --system
 
-- name: copy
-  ansible.builtin.copy:
-    src: ./files/redundant/wk/keepalived/keepalived_backup.conf
+- name: template
+  ansible.builtin.template:
+    src: "./files/lb/keepalived_{{ inventory_hostname }}.conf.j2"
     dest: /etc/keepalived/keepalived.conf
-    mode: "0644"
   ignore_errors: true
 
 - name: service
