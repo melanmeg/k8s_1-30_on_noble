@@ -31,4 +31,4 @@ $ ansible-playbook --key-file ~/.ssh/KEYFILE -i inventory.yml playbook.yml
 
 ## Time of recreate_cluster
 
-Execution time: 179 seconds
+Execution time: 355 seconds
