@@ -5,6 +5,7 @@ variables:
   lb:
     tasks:
       - lb/ha.yml
+      - lb/nginx.yml
   k8s:
     all_node:
       tasks:
@@ -23,4 +24,5 @@ variables:
       tasks:
         - cp/label-node.yml
         - cp/cilium.yml
+        - cp/argocd.yml
         - cp/role.yml

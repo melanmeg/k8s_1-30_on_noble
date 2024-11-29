@@ -6,6 +6,33 @@
 $ ansible-playbook --key-file ~/.ssh/KEYFILE -i inventory.yml playbook.yml
 ```
 
+### After running ansible.
+
+- Login to argocd deployed as a sample
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: argocd-lb
+  namespace: argocd
+spec:
+  type: NodePort
+  ports:
+    - port: 443
+      targetPort: server
+      nodePort: 30041
+      protocol: TCP
+  selector:
+    app.kubernetes.io/instance: argocd
+    app.kubernetes.io/name: argocd-server
+```
+
+- Login
+- `https://192.168.11.130:8081`
+
+![Image](login_argocd.png)
+
 ## Env
 
 - Ubuntu 24.04
