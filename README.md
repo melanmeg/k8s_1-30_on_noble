@@ -55,7 +55,6 @@ EOF
 - Cilium 1.16.1
 - KVM
 - Haproxy + Keepalived
-- NFS
 
 ## Host
 

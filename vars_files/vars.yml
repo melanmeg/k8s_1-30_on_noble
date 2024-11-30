@@ -8,7 +8,6 @@ variables:
   k8s:
     all_node:
       tasks:
-        - common/nfs-client.yml
         - common/k8s.yml
     cp:
       tasks:
