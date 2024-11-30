@@ -5,7 +5,6 @@ variables:
   lb:
     tasks:
       - lb/ha.yml
-      - lb/nginx.yml
   k8s:
     all_node:
       tasks:

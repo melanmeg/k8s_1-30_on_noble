@@ -3,6 +3,15 @@
 ## Usage
 
 ```bash
+$ cd ./files/lb/config_gen && \
+  python -m venv .venv && \
+  source .venv/bin/activate && \
+  pip install -r requirements.txt && \
+  python haproxy.py && \
+  python keepalived.py
+```
+
+```bash
 $ ansible-playbook --key-file ~/.ssh/KEYFILE -i inventory.yml playbook.yml
 ```
 
@@ -10,7 +19,8 @@ $ ansible-playbook --key-file ~/.ssh/KEYFILE -i inventory.yml playbook.yml
 
 - Login to argocd deployed as a sample
 
-```yaml
+```bash
+kubectl apply -f - <<EOF
 apiVersion: v1
 kind: Service
 metadata:
@@ -21,17 +31,21 @@ spec:
   ports:
     - port: 443
       targetPort: server
-      nodePort: 30041
+      nodePort: 30001
       protocol: TCP
   selector:
     app.kubernetes.io/instance: argocd
     app.kubernetes.io/name: argocd-server
+EOF
 ```
 
 - Login
-- `https://192.168.11.130:8081`
 
-![Image](login_argocd.png)
+  > `https://192.168.11.161`
+
+  > admin:admin
+
+  ![Image](login_argocd.png)
 
 ## Env
 
@@ -47,6 +61,7 @@ spec:
 
 | hostname | IP             |
 | -------- | -------------- |
+| k8s-api  | 192.168.11.131 |
 | k8s-lb-1 | 192.168.11.131 |
 | k8s-lb-2 | 192.168.11.132 |
 | k8s-cp-1 | 192.168.11.141 |
@@ -55,6 +70,7 @@ spec:
 | k8s-wk-1 | 192.168.11.151 |
 | k8s-wk-2 | 192.168.11.152 |
 | k8s-wk-3 | 192.168.11.153 |
+| argocd   | 192.168.11.161 |
 
 ## Time of recreate_cluster
 
