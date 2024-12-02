@@ -2,6 +2,8 @@
 
 ## Usage
 
+- haproxy と keepalived の設定ファイルの Jinja テンプレートを生成する
+
 ```bash
 $ cd ./files/lb/config_gen && \
   python -m venv .venv && \
@@ -11,11 +13,17 @@ $ cd ./files/lb/config_gen && \
   python keepalived.py
 ```
 
+- vars_files 配下の変数を適宜修正。
+
+- 事前に `create_cluster.sh` , `destroy_cluster.sh` を物理ノードのホームディレクトリに配置しておく
+
+- 変数は適宜修正。
+
 ```bash
-$ ansible-playbook --key-file ~/.ssh/KEYFILE -i inventory.yml playbook.yml
+$ ./recreate-k8s.sh
 ```
 
-### After running ansible.
+### After running recreate-k8s.sh.
 
 - Login to argocd deployed as a sample
 

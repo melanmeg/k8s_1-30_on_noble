@@ -1,5 +1,13 @@
 #!/bin/bash
 
+KEY_FILE_PATH=~/.ssh/main
+SSH_ALIAS=base2
+SCRIPT_DIR=~/kvm
+
+# KEY_FILE_PATH=~/.ssh/KEFILE
+# SSH_ALIAS=ALIAS_NAME
+# SCRIPT_DIR=~
+
 start_time=$(date +%s)
 
 log_and_execute() {
@@ -7,7 +15,7 @@ log_and_execute() {
     local script="$2"
 
     echo "Start: $description"
-    ssh base2 "bash ~/kvm/$script"
+    ssh $SSH_ALIAS "bash $SCRIPT_DIR/$script"
     echo "Completed: $description"
     echo ""
 }
@@ -17,8 +25,10 @@ recreate_cluster() {
     echo ""
 
     log_and_execute "Remove the existing cluster" "k8sd.sh"
-    log_and_execute "Remove the k8s pvc data" "del-pvc.sh"
     log_and_execute "Create a new cluster" "k8sa.sh"
+
+    # log_and_execute "Remove the existing cluster" "destroy_cluster.sh"
+    # log_and_execute "Create a new cluster" "create_cluster.sh"
 
     echo "Completed recreating the k8s cluster."
     echo ""
@@ -26,7 +36,7 @@ recreate_cluster() {
 
 run_ansible_playbook() {
     echo "Starting Running the ansible playbook."
-    ansible-playbook --key-file ~/.ssh/main -i inventory.yml playbook.yml
+    ansible-playbook --key-file $KEY_FILE_PATH -i inventory.yml playbook.yml
     echo "Completed Running the ansible playbook."
     echo ""
 }
