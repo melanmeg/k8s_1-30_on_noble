@@ -81,4 +81,16 @@ EOF
 
 ## Time of recreate_cluster
 
+### オンプレミス
+
 Execution time: 464 seconds
+
+### GKE
+
+Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
+Total Execution time: 664 seconds
+
+$ terraform state list
+google_compute_network.default
+google_compute_subnetwork.default
+google_container_cluster.default
