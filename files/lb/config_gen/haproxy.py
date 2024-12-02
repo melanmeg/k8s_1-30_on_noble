@@ -15,4 +15,4 @@ def generate_script(template_path, output_path, **kwargs):
     with open(output_path, 'w') as output_file:
         output_file.write(rendered_script)
 
-generate_script('./haproxy_template.cfg', '../haproxy.cfg.j2', lists=lists)
+generate_script('./haproxy_template.cfg.j2', '../haproxy.cfg.j2', lists=lists)
