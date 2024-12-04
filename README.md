@@ -2,6 +2,13 @@
 
 ## prepare
 
+- 必要なライブラリ
+
+```
+ansible
+terraform
+```
+
 - Terraform 対象サーバーで実行
 
 ```bash
