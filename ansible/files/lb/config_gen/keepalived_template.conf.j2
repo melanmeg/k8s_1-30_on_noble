@@ -7,7 +7,7 @@ vrrp_script chk_haproxy {
 
 # Configuration for Virtual Interface
 vrrp_instance LB_VIP_1 {
-  interface enp1s0
+  interface ens3
   state {{ state }}
   priority {{ priority }}
   virtual_router_id 1
@@ -29,7 +29,7 @@ vrrp_instance LB_VIP_1 {
 }
 {% for ip in lists %}
 vrrp_instance LB_VIP_{{ loop.index + 1 }} {
-  interface enp1s0
+  interface ens3
   state {{ state }}
   priority {{ priority }}
   virtual_router_id {{ loop.index + 1 }}

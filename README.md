@@ -1,5 +1,21 @@
 # kubernetes 1.30 on nobel
 
+## prepare
+
+- Terraform 対象サーバーで実行
+
+```bash
+$ echo 'security_driver = "none"' | sudo tee /etc/libvirt/qemu.conf > /dev/null
+$ sudo systemctl restart libvirtd
+```
+
+- Terraform 実行サーバーで実行
+
+```bash
+$ sudo apt update -y \
+  sudo apt install -y mkisofs
+```
+
 ## Usage
 
 - haproxy と keepalived の設定ファイルの Jinja テンプレートを生成する
@@ -13,17 +29,19 @@ $ cd ./files/lb/config_gen && \
   python keepalived.py
 ```
 
-- vars_files 配下の変数を適宜修正。
+### vars_files 配下の変数を適宜修正。
 
-- 事前に `create_cluster.sh` , `destroy_cluster.sh` を物理ノードのホームディレクトリに配置しておく
+### 事前に `create_cluster.sh` , `destroy_cluster.sh` を物理ノードのホームディレクトリに配置しておく
 
-- 変数は適宜修正。
+### 変数は適宜修正。
+
+### 実行
 
 ```bash
 $ ./recreate-k8s.sh
 ```
 
-### After running recreate-k8s.sh.
+## After running recreate-k8s.sh.
 
 - Login to argocd deployed as a sample
 
@@ -68,7 +86,7 @@ EOF
 
 | hostname | IP             |
 | -------- | -------------- |
-| k8s-api  | 192.168.11.131 |
+| k8s-api  | 192.168.11.130 |
 | k8s-lb-1 | 192.168.11.131 |
 | k8s-lb-2 | 192.168.11.132 |
 | k8s-cp-1 | 192.168.11.141 |
@@ -83,10 +101,13 @@ EOF
 
 ### オンプレミス
 
-Execution time: 464 seconds
+```
+Execution time: 320 seconds
+```
 
 ### GKE
 
+```
 Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
 Total Execution time: 664 seconds
 
@@ -94,3 +115,10 @@ $ terraform state list
 google_compute_network.default
 google_compute_subnetwork.default
 google_container_cluster.default
+```
+
+## Clean Up
+
+```bash
+$ terraform -chdir=./terraform/env destroy -auto-approve -input=false
+```

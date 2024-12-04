@@ -7,9 +7,9 @@ vrrp_script chk_haproxy {
 
 # Configuration for Virtual Interface
 vrrp_instance LB_VIP_1 {
-  interface enp1s0
-  state MASTER
-  priority 101
+  interface ens3
+  state BACKUP
+  priority 99
   virtual_router_id 1
   smtp_alert              # Enable Notifications Via Email
   authentication {
@@ -29,9 +29,9 @@ vrrp_instance LB_VIP_1 {
 }
 
 vrrp_instance LB_VIP_2 {
-  interface enp1s0
-  state MASTER
-  priority 101
+  interface ens3
+  state BACKUP
+  priority 99
   virtual_router_id 2
   smtp_alert              # Enable Notifications Via Email
   authentication {
