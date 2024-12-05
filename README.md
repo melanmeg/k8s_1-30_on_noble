@@ -2,23 +2,18 @@
 
 ## prepare
 
-- 必要なライブラリ
-
-```
+```bash
+# 必要なライブラリ
 ansible
 terraform
 ```
 
-- Terraform 対象サーバーで実行
-
 ```bash
+# Terraform 対象サーバーで実行
 $ echo 'security_driver = "none"' | sudo tee /etc/libvirt/qemu.conf > /dev/null
 $ sudo systemctl restart libvirtd
-```
 
-- Terraform 実行サーバーで実行
-
-```bash
+# Terraform 実行サーバーで実行
 $ sudo apt update -y \
   sudo apt install -y mkisofs
 ```
@@ -36,16 +31,14 @@ $ cd ./files/lb/config_gen && \
   python keepalived.py
 ```
 
-### vars_files 配下の変数を適宜修正。
+### ansible/vars_files/ 配下の変数を適宜修正。
 
-### 事前に `create_cluster.sh` , `destroy_cluster.sh` を物理ノードのホームディレクトリに配置しておく
-
-### 変数は適宜修正。
+### terraform/env/main.tf の変数は適宜修正。
 
 ### 実行
 
 ```bash
-$ ./recreate-k8s.sh
+$ ./create-k8s.sh
 ```
 
 ## After running recreate-k8s.sh.
