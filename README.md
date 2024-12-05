@@ -23,7 +23,8 @@ $ sudo apt update -y \
 - haproxy と keepalived の設定ファイルの Jinja テンプレートを生成する
 
 ```bash
-$ cd ./files/lb/config_gen && \
+$ cd ./ansible/files/lb/config_gen
+$ rm -rf .venv && \
   python -m venv .venv && \
   source .venv/bin/activate && \
   pip install -r requirements.txt && \

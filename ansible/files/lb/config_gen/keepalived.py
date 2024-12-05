@@ -15,5 +15,15 @@ def generate_script(template_path, output_path, **kwargs):
     with open(output_path, 'w') as output_file:
         output_file.write(rendered_script)
 
-generate_script('./keepalived_template.conf.j2', '../keepalived_k8s-lb-1.conf.j2', lists=lists, state='MASTER', priority='101')
-generate_script('./keepalived_template.conf.j2', '../keepalived_k8s-lb-2.conf.j2', lists=lists, state='BACKUP', priority='99')
+generate_script('./keepalived_template.conf.j2', '../keepalived_k8s-lb-1.conf.j2',
+    lists=lists,
+    state='MASTER',
+    priority='101',
+    is_lb_number=1
+    )
+generate_script('./keepalived_template.conf.j2', '../keepalived_k8s-lb-2.conf.j2',
+    lists=lists,
+    state='BACKUP',
+    priority='99',
+    is_lb_number=2
+    )

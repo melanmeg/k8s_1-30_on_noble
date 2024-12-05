@@ -16,9 +16,11 @@ vrrp_instance LB_VIP_1 {
       auth_type AH
       auth_pass zaq12wsx	# Password for accessing vrrpd. Same on all devices
   }
-  unicast_src_ip {% raw %}{{ hostvars['k8s-lb-1']['ansible_default_ipv4']['address'] }}{% endraw %} # Private IP address of primary
+  {% if is_lb_number == 1 %}unicast_src_ip {% raw %}{{ hostvars['k8s-lb-1']['ansible_default_ipv4']['address'] }}{% endraw %} # Private IP address of primary{% endif %}
+  {% if is_lb_number == 2 %}unicast_src_ip {% raw %}{{ hostvars['k8s-lb-2']['ansible_default_ipv4']['address'] }}{% endraw %} # Private IP address of primary{% endif %}
   unicast_peer {
-      {% raw %}{{ hostvars['k8s-lb-2']['ansible_default_ipv4']['address'] }}{% endraw %} # Private IP address of the backup haproxy
+      {% if is_lb_number == 2 %}{% raw %}{{ hostvars['k8s-lb-1']['ansible_default_ipv4']['address'] }}{% endraw %} # Private IP address of the backup haproxy{% endif %}
+      {% if is_lb_number == 1 %}{% raw %}{{ hostvars['k8s-lb-2']['ansible_default_ipv4']['address'] }}{% endraw %} # Private IP address of the backup haproxy{% endif %}
   }
   virtual_ipaddress {
       {% raw %}{{ KUBE_API_SERVER_VIP }}{% endraw %}
@@ -38,9 +40,11 @@ vrrp_instance LB_VIP_{{ loop.index + 1 }} {
       auth_type AH
       auth_pass zaq12wsx  # Password for accessing vrrpd. Same on all devices
   }
-  unicast_src_ip {% raw %}{{ hostvars['k8s-lb-1']['ansible_default_ipv4']['address'] }}{% endraw %} # Private IP address of primary
+  {% if is_lb_number == 1 %}unicast_src_ip {% raw %}{{ hostvars['k8s-lb-1']['ansible_default_ipv4']['address'] }}{% endraw %} # Private IP address of primary{% endif %}
+  {% if is_lb_number == 2 %}unicast_src_ip {% raw %}{{ hostvars['k8s-lb-2']['ansible_default_ipv4']['address'] }}{% endraw %} # Private IP address of primary{% endif %}
   unicast_peer {
-      {% raw %}{{ hostvars['k8s-lb-2']['ansible_default_ipv4']['address'] }}{% endraw %} # Private IP address of the backup haproxy
+      {% if is_lb_number == 2 %}{% raw %}{{ hostvars['k8s-lb-1']['ansible_default_ipv4']['address'] }}{% endraw %} # Private IP address of the backup haproxy{% endif %}
+      {% if is_lb_number == 1 %}{% raw %}{{ hostvars['k8s-lb-2']['ansible_default_ipv4']['address'] }}{% endraw %} # Private IP address of the backup haproxy{% endif %}
   }
   virtual_ipaddress {
       {{ ip }}
