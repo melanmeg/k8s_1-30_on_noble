@@ -16,6 +16,11 @@ $ sudo systemctl restart libvirtd
 # Terraform 実行サーバーで実行
 $ sudo apt update -y \
   sudo apt install -y mkisofs
+
+# Ansible 実行サーバーで実行（Mitogenインストール）
+$ curl -Lo /tmp/mitogen-0.3.8.tar.gz https://files.pythonhosted.org/packages/source/m/mitogen/mitogen-0.3.8.tar.gz
+  sudo tar zxvf /tmp/mitogen-0.3.8.tar.gz -C /opt/
+  rm -f /tmp/mitogen-0.3.8.tar.gz
 ```
 
 ## Usage

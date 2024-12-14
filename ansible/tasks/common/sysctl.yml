@@ -21,9 +21,4 @@
 
 - name: shell
   become: true
-  ansible.builtin.shell: sysctl --system && ulimit -n
-
-- name: Reboot the machine (Wait for 5 min)
-  become: true
-  ansible.builtin.reboot:
-    reboot_timeout: 300
+  ansible.builtin.shell: sysctl --system && ulimit -n && sysctl -p

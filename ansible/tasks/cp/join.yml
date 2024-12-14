@@ -1,6 +1,3 @@
-- name: kubeadm config images pull
-  ansible.builtin.shell: kubeadm config images pull
-
 - name: Copy join_kubeadm_cp.yaml
   ansible.builtin.copy:
     src: "./files/fetch/join_kubeadm_cp.yaml"
