@@ -11,6 +11,10 @@ resource "libvirt_domain" "domain" {
 
   cloudinit = libvirt_cloudinit_disk.commoninit[count.index].id
 
+  cpu {
+    mode = "host-passthrough"
+  }
+
   console {
     target_port = "0"
     type        = "pty"
