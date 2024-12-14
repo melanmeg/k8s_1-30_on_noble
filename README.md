@@ -17,6 +17,9 @@ $ sudo systemctl restart libvirtd
 $ sudo apt update -y \
   sudo apt install -y mkisofs
 
+# Terraform 実行サーバーで実行（定期的実行しておく）
+$ wget -O terraform/modules/common/noble-server-cloudimg-amd64.img https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img
+
 # Ansible 実行サーバーで実行（Mitogenインストール）
 $ curl -Lo /tmp/mitogen-0.3.8.tar.gz https://files.pythonhosted.org/packages/source/m/mitogen/mitogen-0.3.8.tar.gz
   sudo tar zxvf /tmp/mitogen-0.3.8.tar.gz -C /opt/
