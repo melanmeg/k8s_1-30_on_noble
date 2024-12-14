@@ -111,7 +111,7 @@ EOF
 ### オンプレミス
 
 ```
-Execution time: 299 seconds
+Execution time: 257 seconds
 ```
 
 ### GKE
