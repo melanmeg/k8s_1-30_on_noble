@@ -30,24 +30,6 @@
     remote_src: true
   ignore_errors: true
 
-- name: file {{ USER }}
-  ansible.builtin.file:
-    path: "/home/{{ USER }}/.kube"
-    state: directory
-    owner: "{{ USER }}"
-    group: "{{ USER }}"
-    recurse: true
-
-- name: copy {{ USER }}
-  ansible.builtin.copy:
-    src: /etc/kubernetes/admin.conf
-    dest: "/home/{{ USER }}/.kube/config"
-    owner: "{{ USER }}"
-    group: "{{ USER }}"
-    mode: "0600"
-    remote_src: true
-  ignore_errors: true
-
 - name: blockinfile .bashrc
   ansible.builtin.blockinfile:
     dest: "~/.bashrc"
